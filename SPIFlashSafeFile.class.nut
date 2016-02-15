@@ -19,6 +19,14 @@ const SPIFLASHSAFEFILE_DEFAULT_SLOTS = 3;
 const SPIFLASHSAFEFILE_DEFAULT_COPIES = 2;
 const SPIFLASHSAFEFILE_MINIMUM_COPIES = 2;
 
+const SPIFLASHSAFEFILE_ERR_SERIALIZER = "Serializer class must be defined";
+const SPIFLASHSAFEFILE_ERR_INVALID_START = "Invalid start value";
+const SPIFLASHSAFEFILE_ERR_INVALID_END = "Invalid end value";
+const SPIFLASHSAFEFILE_ERR_INVALID_BOUNDARY = "start and end must be at sector boundaries";
+const SPIFLASHSAFEFILE_ERR_INVALID_LENGTH = "Total length must be a multiple of %d sectors";
+const SPIFLASHSAFEFILE_ERR_TOO_LARGE = "Can't write an object that large";
+
+
 class SPIFlashSafeFile {
     
     _flash = null;
@@ -38,20 +46,13 @@ class SPIFlashSafeFile {
 
     static className = "SPIFlashSafeFile";
 
-    static ERR_SERIALIZER = "Serializer class must be defined"
-    static ERR_INVALID_START = "Invalid start value"
-    static ERR_INVALID_END = "Invalid end value"
-    static ERR_INVALID_BOUNDARY = "start and end must be at sector boundaries"
-    static ERR_INVALID_LENGTH = "Total length must be a multiple of %d sectors"
-    static ERR_TOO_LARGE = "Can't write an object that large"
-
 
     //--------------------------------------------------------------------------
     // Notes: start and end must be aligned with sector boundaries and the total
     //        size must be a multiple of "slots" sectors.
     constructor(start = null, end = null, flash = null, slots = null, copies = null) {
         
-        if (!("Serializer" in getroottable())) throw ERR_SERIALIZER;
+        if (!("Serializer" in getroottable())) throw SPIFLASHSAFEFILE_ERR_SERIALIZER;
         
         // Alow the last three parameter to be optional
         if (typeof flash == "integer") {
@@ -76,16 +77,16 @@ class SPIFlashSafeFile {
         
         if (start == null) _start = 0;
         else if (start < _size) _start = start;
-        else throw ERR_INVALID_START;
-        if (_start % SPIFLASHSAFEFILE_SECTOR_SIZE != 0) throw ERR_INVALID_BOUNDARY;
+        else throw SPIFLASHSAFEFILE_ERR_INVALID_START;
+        if (_start % SPIFLASHSAFEFILE_SECTOR_SIZE != 0) throw SPIFLASHSAFEFILE_ERR_INVALID_BOUNDARY;
         
         if (end == null) _end = _size;
         else if (end > _start) _end = end;
-        else throw ERR_INVALID_END;
-        if (_end % SPIFLASHSAFEFILE_SECTOR_SIZE != 0) throw ERR_INVALID_BOUNDARY;
+        else throw SPIFLASHSAFEFILE_ERR_INVALID_END;
+        if (_end % SPIFLASHSAFEFILE_SECTOR_SIZE != 0) throw SPIFLASHSAFEFILE_ERR_INVALID_BOUNDARY;
 
         _len = _end - _start;
-        if (_len % (SPIFLASHSAFEFILE_SECTOR_SIZE * _slots) != 0) throw format(ERR_INVALID_LENGTH, _slots);
+        if (_len % (SPIFLASHSAFEFILE_SECTOR_SIZE * _slots) != 0) throw format(SPIFLASHSAFEFILE_ERR_INVALID_LENGTH, _slots);
         
         _data_len = _len / _slots;
         _max_data = _data_len - SPIFLASHSAFEFILE_SECTOR_META_SIZE;
@@ -112,7 +113,7 @@ class SPIFlashSafeFile {
         // Serialise the object
         local object = Serializer.serialize(object);
         local obj_len = object.len();
-        if (obj_len > _max_data) throw ERR_TOO_LARGE;
+        if (obj_len > _max_data) throw SPIFLASHSAFEFILE_ERR_TOO_LARGE;
 
         // Write out [2] copies of the object
         local nextId = null, success = true;
