@@ -3,7 +3,7 @@
 
 The SPIFlashSafeFile (SFSF) library implements a redundant [wear leveling](https://en.wikipedia.org/wiki/Wear_leveling) file system that stores a single serialisable critical object reliably on a SPI Flash device (using either the built-in [hardware.spiflash](https://electricimp.com/docs/api/hardware/spiflash) object on imp003+, or an external SPI Flash plus the [SPIFlash library](https://github.com/electricimp/spiflash) on the imp001 and imp002).
 
-**To add this library to your project, add `#require "SPIFlashSafeFile.class.nut:1.0.0"`` to the top of your device code.**
+**To add this library to your project, add `#require "SPIFlashSafeFile.class.nut:1.0.0"` to the top of your device code.**
 
 You can view the library’s source code on [GitHub](https://github.com/electricimp/SPIFlashSafeFile/tree/v1.0.0).
 
