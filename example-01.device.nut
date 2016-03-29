@@ -1,3 +1,4 @@
+#require "Serializer.class.nut:1.0.0"
 #require "SPIFlashSafeFile.class.nut:1.0.0"
 
 sfsf <- SPIFlashSafeFile(0 * SPIFLASHSAFEFILE_SECTOR_SIZE, 5 * SPIFLASHSAFEFILE_SECTOR_SIZE, 5);

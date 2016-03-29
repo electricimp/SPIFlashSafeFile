@@ -22,6 +22,7 @@ The start and end values **must** be on sector boundaries (0x1000, 0x2000, ...),
 
 #### imp003+
 ```squirrel
+#require "Serializer.class.nut:1.0.0"
 #require "SPIFlashSafeFile.class.nut:1.0.0"
 
 // Allocate the first six pages to three spaces of 8kb each. Two copies of each object will be written to flash.
@@ -31,6 +32,7 @@ sfsf <- SPIFlashSafeFile(0x0000, 0x6000, 3);
 
 #### imp001 / imp002
 ```squirrel
+#require "Serializer.class.nut:1.0.0"
 #require "SPIFlash.class.nut:1.0.1"
 #require "SPIFlashSafeFile.class.nut:1.0.0"
 
