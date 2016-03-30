@@ -1,11 +1,26 @@
 
-# SPIFlashSafeFile 1.0.0
+# SPIFlashSafeFile
 
-The SPIFlashSafeFile (SFSF) library implements a redundant [wear leveling](https://en.wikipedia.org/wiki/Wear_leveling) file system that stores a single serialisable critical object reliably on a SPI Flash device (using either the built-in [hardware.spiflash](https://electricimp.com/docs/api/hardware/spiflash) object on imp003+, or an external SPI Flash plus the [SPIFlash library](https://github.com/electricimp/spiflash) on the imp001 and imp002).
+The SPIFlashSafeFile (SFSF) class implements a redundant [wear leveling](https://en.wikipedia.org/wiki/Wear_leveling) file system that stores a single serialisable critical object reliably on a SPI Flash device (using either the built-in [hardware.spiflash](https://electricimp.com/docs/api/hardware/spiflash) object on imp003+, or an external SPI Flash plus the [SPIFlash library](https://github.com/electricimp/spiflash) on the imp001 and imp002).  This class is dependent on the [Serializer library](https://github.com/electricimp/Serializer).
 
-**To add this library to your project, add `#require "SPIFlashSafeFile.class.nut:1.0.0"` to the top of your device code.**
+**To add this code to your project, copy the entire `SPIFlashSafeFile.class.nut` file and paste it at the top of your device code just after your library #require statmements.**
 
-You can view the library’s source code on [GitHub](https://github.com/electricimp/SPIFlashSafeFile/tree/v1.0.0).
+#### imp003+
+```squirrel
+#require "Serializer.class.nut:1.0.0"
+
+// Paste SPIFlashSafeFile.class.nut file here
+```
+
+#### imp001 / imp002
+```squirrel
+#require "Serializer.class.nut:1.0.0"
+#require "SPIFlash.class.nut:1.0.1"
+
+// Paste SPIFlashSafeFile.class.nut file here
+```
+
+You can view the library’s source code on [GitHub](https://github.com/electricimp/SPIFlashSafeFile).
 
 ## Overview of the File System
 
@@ -22,20 +37,12 @@ The start and end values **must** be on sector boundaries (0x1000, 0x2000, ...),
 
 #### imp003+
 ```squirrel
-#require "Serializer.class.nut:1.0.0"
-#require "SPIFlashSafeFile.class.nut:1.0.0"
-
 // Allocate the first six pages to three spaces of 8kb each. Two copies of each object will be written to flash.
 sfsf <- SPIFlashSafeFile(0x0000, 0x6000, 3);
-
 ```
 
 #### imp001 / imp002
 ```squirrel
-#require "Serializer.class.nut:1.0.0"
-#require "SPIFlash.class.nut:1.0.1"
-#require "SPIFlashSafeFile.class.nut:1.0.0"
-
 // Configure the external SPIFlash
 flash <- SPIFlash(hardware.spi257, hardware.pin8);
 flash.configure(30000);
